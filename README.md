@@ -1,4 +1,6 @@
-# Monitoring-soil-moisture-value-in-Thing-speak-cloud
+# Name:Soundarya J
+# Reg.no:212223220108
+# Ex-5:Monitoring-soil-moisture-value-in-Thing-speak-cloud
 # Uploading soil moisture sensor data in Thing Speak cloud
 
 # AIM:
@@ -84,8 +86,62 @@ Prototype and build IoT systems without setting up servers or developing web sof
 ![image](https://github.com/user-attachments/assets/5beaf86c-0d5d-4b99-9c22-bb0351f487ab)
 
 # PROGRAM:
+```
+#include <WiFi.h>
+#include <ThingSpeak.h>
+#define Soil_Moisture 34
+// Replace with your credentials
+const char ssid[] = "vivo Y22";
+const char pass[] = "12345678";
+
+int keyIndex = 0;
+WiFiClient  client;
+
+unsigned long myChannelNumber = 3121454 ;
+const int ChannelField = 1; 
+const char * myWriteAPIKey = "6BPNODSW19VZSNCP";
+
+const int airValue = 4095; 
+const int waterValue = 0;
+int percentage =0;
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(Soil_Moisture, INPUT);
+  WiFi.mode(WIFI_STA);   
+  ThingSpeak.begin(client);
+}
+
+void loop()
+{
+ if (WiFi.status() != WL_CONNECTED)
+  {
+    Serial.print("Attempting to connect to SSID: ");
+    Serial.println(ssid);
+    while (WiFi.status() != WL_CONNECTED)
+    {
+      WiFi.begin(ssid, pass);
+      Serial.print(".");
+      delay(5000);
+    }
+    Serial.println("\nConnected.");
+  }
+
+  int Soil_Value = analogRead(Soil_Moisture);
+  percentage = map(Soil_Value, airValue, waterValue, 0, 100);
+  percentage = constrain(percentage, 0, 100);
+  Serial.println("Soil moisture percentage");
+  Serial.println(percentage);
+  ThingSpeak.writeField(myChannelNumber, ChannelField, percentage, myWriteAPIKey);
+  delay(5000);
+}
+```
 # CIRCUIT DIAGRAM:
+![WhatsApp Image 2025-10-17 at 11 19 31 AM](https://github.com/user-attachments/assets/f638a69b-41dd-4d9e-9075-6b709badf18d)
+
 # OUTPUT:
+![WhatsApp Image 2025-10-17 at 11 09 05 AM](https://github.com/user-attachments/assets/337f60b5-f8a6-45ce-ab22-0a7917859b03)
+
 # RESULT:
 Thus the soil moisture values are updated in the Thing speak cloud using ESP32 controller.
 
